@@ -16,12 +16,12 @@
             this.lstReports = new ListBox();
             this.SuspendLayout();
 
-            // Reports List
+            /// Reports List
             this.lstReports.Location = new System.Drawing.Point(20, 20);
             this.lstReports.Width = 350;
             this.lstReports.Height = 300;
 
-            // ViewReportsForm
+            /// ViewReportsForm
             this.ClientSize = new System.Drawing.Size(400, 350);
             this.Controls.Add(this.lstReports);
             this.Text = "Submitted Reports";

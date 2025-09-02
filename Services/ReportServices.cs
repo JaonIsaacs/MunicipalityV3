@@ -9,7 +9,9 @@ namespace MunicipalityV3.Services
 {
     public static class ReportService
     {
-        // Static list to hold all reports in memory
+        /// <summary>
+        /// Static list to hold all reports in memory
+        /// </summary>
         private static readonly List<IssueReport> _reports = new List<IssueReport>();
 
         public static void AddReport(IssueReport report)
