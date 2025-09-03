@@ -2,6 +2,9 @@ using MunicipalityV3.Forms;
 
 namespace MunicipalityV3
 {
+    /// <summary>
+    /// main navigation
+    /// </summary>
     public partial class MainForm : Form
     {
         public MainForm()
@@ -11,14 +14,12 @@ namespace MunicipalityV3
 
         private void btnReportIssues_Click(object sender, EventArgs e)
         {
-            var reportForm = new ReportIssueForm();
-            reportForm.ShowDialog();
+            new ReportIssueForm().ShowDialog();
         }
 
         private void btnViewReports_Click(object sender, EventArgs e)
         {
-            var viewReportsForm = new ViewReportsForm();
-            viewReportsForm.ShowDialog();
+            new ViewReportsForm().ShowDialog();
         }
     }
 }

@@ -8,21 +8,25 @@ namespace MunicipalityV3.Models
 {
     public class IssueReport
     {
+        public Guid Id { get; set; }
         public string Location { get; set; }
         public string Category { get; set; }
         public string Description { get; set; }
-        public List<string> Attachments { get; set; }
+        public LinkedList<string> Attachments { get; set; }
         public DateTime SubmittedAt { get; set; }
+        public string Status { get; set; }
 
         public IssueReport()
         {
-            Attachments = new List<string>();
+            Id = Guid.NewGuid();
+            Attachments = new LinkedList<string>();
             SubmittedAt = DateTime.Now;
+            Status = "Pending";
         }
 
         public override string ToString()
         {
-            return $"{SubmittedAt:g} | {Category} at {Location}";
+            return $"{Category} @ {Location} ({Status}) - {SubmittedAt:g}";
         }
     }
 }
