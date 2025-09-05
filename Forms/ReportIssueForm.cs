@@ -16,28 +16,55 @@ namespace MunicipalityV3.Forms
     {
         private readonly IssueReport _editingReport;
 
-        /// <summary>
-        /// Default constructor for new report
-        /// </summary>
         public ReportIssueForm()
         {
             InitializeComponent();
+            HookEventsForProgress();
+            UpdateProgress(); /// ensure bar starts at 0
         }
 
-        /// <summary>
-        /// Overloaded constructor for editing existing report
-        /// </summary>
-        /// <param name="report"></param>
         public ReportIssueForm(IssueReport report) : this()
         {
             _editingReport = report;
             txtLocation.Text = report.Location;
             cmbCategory.SelectedItem = report.Category;
             rtbDescription.Text = report.Description;
+
             foreach (var att in report.Attachments)
             {
                 lstAttachments.Items.Add(att);
             }
+
+            UpdateProgress(); /// update based on pre-filled fields
+        }
+
+        private void HookEventsForProgress()
+        {
+            txtLocation.TextChanged += (s, e) => UpdateProgress();
+            cmbCategory.SelectedIndexChanged += (s, e) => UpdateProgress();
+            rtbDescription.TextChanged += (s, e) => UpdateProgress();
+            lstAttachments.SelectedIndexChanged += (s, e) => UpdateProgress();
+        }
+
+        private void UpdateProgress()
+        {
+            int progress = 0;
+
+            if (!string.IsNullOrWhiteSpace(txtLocation.Text)) progress += 25;
+            if (cmbCategory.SelectedItem != null) progress += 25;
+            if (!string.IsNullOrWhiteSpace(rtbDescription.Text)) progress += 25;
+            if (lstAttachments.Items.Count > 0) progress += 25;
+
+            progressEngagement.Value = progress;
+            lblEngagement.Text = progress switch
+            {
+                0 => "Let's get started! ",
+                25 => "Good start, keep going! ",
+                50 => "Halfway there! ",
+                75 => "Almost done! ",
+                100 => "Ready to submit! ✅",
+                _ => lblEngagement.Text
+            };
         }
 
         private void btnAttach_Click(object sender, EventArgs e)
@@ -49,6 +76,7 @@ namespace MunicipalityV3.Forms
                 {
                     lstAttachments.Items.Add(file);
                 }
+                UpdateProgress(); /// update progress after adding attachments
             }
         }
 
@@ -56,7 +84,6 @@ namespace MunicipalityV3.Forms
         {
             if (_editingReport != null)
             {
-                /// Editing an existing report
                 _editingReport.Location = txtLocation.Text;
                 _editingReport.Category = cmbCategory.SelectedItem?.ToString();
                 _editingReport.Description = rtbDescription.Text;
@@ -72,7 +99,6 @@ namespace MunicipalityV3.Forms
             }
             else
             {
-                /// New report entry
                 var report = new IssueReport
                 {
                     Location = txtLocation.Text,
@@ -87,8 +113,8 @@ namespace MunicipalityV3.Forms
 
                 ReportService.AddReport(report);
                 lblEngagement.Text = "✅ Thank you! Report submitted.";
-                progressEngagement.Value = Math.Min(progressEngagement.Value + 20, 100);
                 ClearForm();
+                UpdateProgress(); /// reset after submit
             }
         }
 
